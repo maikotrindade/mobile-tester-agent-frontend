@@ -1,0 +1,122 @@
+:root {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+ text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Light mode colors */
+  --background-color-light: #f7fafc;
+  --text-color-light: #1a202c; /* Changed to a darker color for better contrast */
+  --primary-color-light: #667eea; /* Gradient start for heading and buttons */
+  --secondary-color-light: #764ba2;
+  --card-background-light: #ffffff;
+  --border-color-light: #e2e8f0;
+  --box-shadow-light: 0 20px 40px rgba(0, 0, 0, 0.1);
+  --input-background-light: white;
+  --input-border-light: #e2e8f0;
+  --step-item-background-light: white;
+  --steps-container-background-light: #f7fafc;
+  --steps-container-border-light: #cbd5e0;
+  --button-text-light: white;
+
+
+  /* Dark mode colors */
+  --background-color-dark: #1a202c;
+  --text-color-dark: #e2e8f0;
+  --primary-color-dark: #b794f4;
+  --secondary-color-dark: #805ad5;
+  --card-background-dark: #2d3748;
+  --border-color-dark: #4a5568;
+  --box-shadow-dark: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --input-background-dark: #4a5568;
+  --input-border-dark: #6a7b8c;
+  --step-item-background-dark: #4a5568;
+  --steps-container-background-dark: #2d3748;
+  --steps-container-border-dark: #4a5568;
+  --button-text-dark: white;
+
+  /* --- Default (Light) Theme Variables --- */
+  --background-color: var(--background-color-light);
+  --text-color: var(--text-color-light);
+  --card-background: var(--card-background-light);
+  --border-color: var(--border-color-light);
+  --box-shadow: var(--box-shadow-light);
+  --input-background: var(--input-background-light);
+  --input-border: var(--input-border-light);
+  --steps-container-background: var(--steps-container-background-light);
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+body {
+ margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-size: 200% 200%; /* Increase size for animation */
+  animation: gradientAnimation 10s ease infinite; /* Apply animation */
+  color: var(--text-color); /* Use text color variable */
+ box-sizing: border-box;
+
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--primary-color); /* Use primary color for headings */
+  text-align: center;
+  margin-bottom: 30px; /* Add spacing below heading */
+}
+
+p {
+  margin-bottom: 20px; /* Spacing for paragraphs */
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--primary-color); /* Use primary color for buttons */
+  color: white; /* White text on buttons */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+

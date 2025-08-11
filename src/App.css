@@ -1,0 +1,40 @@
+/* General App Container */
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--background-color); /* Use a variable for background */
+  color: var(--text-color); /* Use a variable for text color */
+  font-family: var(--font-family); /* Use the defined font family */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* Main content area within the App */
+.App-content {
+  background-color: var(--surface-color); /* Use a variable for content background */
+  padding: 40px;
+  border-radius: var(--border-radius); /* Use a variable for border radius */
+  box-shadow: var(--box-shadow-elevation-2); /* Apply a multi-layered shadow */
+  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
