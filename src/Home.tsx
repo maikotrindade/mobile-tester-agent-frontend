@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import styles from './Home.module.css';
 
 function Home() {
@@ -7,6 +8,8 @@ function Home() {
   const [steps, setSteps] = useState<{ id: number; description: string }[]>([]);
   const [newStepDescription, setNewStepDescription] = useState('');
   const [stepCounter, setStepCounter] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddStep = () => {
     if (newStepDescription.trim() !== '') {
@@ -21,7 +24,7 @@ function Home() {
     setSteps(updatedSteps);
   };
 
-  const handleRunTest = () => {
+  const handleRunTest = async () => {
     if (!selectedModel) {
       alert('Please select an AI model');
       return;
@@ -37,31 +40,53 @@ function Home() {
       return;
     }
 
-    // Implement test execution logic here
-    console.log('Running test with:', {
-      model: selectedModel,
-      goal: testGoal,
-      steps: steps.map(step => step.description),
-    });
+    setIsLoading(true);
+    setError(null);
 
-    // Simulate test execution feedback (optional)
-    const runButton = document.querySelector(`.${styles.btnRunTest}`) as HTMLButtonElement;
-    const originalText = runButton.innerHTML;
+    try {
+      const payload = {
+        model: selectedModel,
+        goal: testGoal,
+        steps: steps.map(step => step.description),
+      };
 
-    runButton.innerHTML = '<span class="icon">⏳</span>Running Test...'; // You might need to add the icon class in your CSS
-    runButton.disabled = true;
-    runButton.style.opacity = '0.7';
+      console.log('Sending request to backend:', payload);
 
-    setTimeout(() => {
-      runButton.innerHTML = '<span class="icon">✅</span>Test Complete!'; // You might need to add the icon class in your CSS
+      const response = await axios.post('http://localhost:8080/gemini', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000, // 30 seconds timeout
+      });
 
-      setTimeout(() => {
-        runButton.innerHTML = originalText;
-        runButton.disabled = false;
-        runButton.style.opacity = '1';
-        alert('Test executed successfully!');
-      }, 2000);
-    }, 3000);
+      console.log('Test execution response:', response.data);
+      alert('Test executed successfully!');
+    } catch (err) {
+      console.error('Test execution failed:', err);
+      
+      let errorMessage = 'An unexpected error occurred';
+      
+      if (axios.isAxiosError(err)) {
+        if (err.code === 'ECONNABORTED') {
+          errorMessage = 'Request timed out. Please try again.';
+        } else if (err.code === 'ERR_NETWORK') {
+          errorMessage = 'Network error. Please check if the backend server is running on http://localhost:8080';
+        } else if (err.response) {
+          // Server responded with error status
+          errorMessage = err.response.data?.message || err.response.statusText || `Server error: ${err.response.status}`;
+        } else if (err.request) {
+          // Request was made but no response received
+          errorMessage = 'No response from server. Please check if the backend is running and CORS is configured.';
+        } else {
+          errorMessage = err.message || 'Failed to execute test';
+        }
+      }
+      
+      setError(errorMessage);
+      alert(`Test execution failed: ${errorMessage}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -135,9 +160,19 @@ function Home() {
         </div>
 
         <div className={styles.buttonGroup}>
-
-          <button className={`${styles.button} ${styles.btnRunTest}`} onClick={handleRunTest}>
-            <span className="icon">▶ </span>Run Test
+          {error && (
+            <div className={styles.errorMessage} style={{ color: 'red', marginBottom: '10px' }}>
+              {error}
+            </div>
+          )}
+          <button 
+            className={`${styles.button} ${styles.btnRunTest}`} 
+            onClick={handleRunTest}
+            disabled={isLoading}
+            style={{ opacity: isLoading ? 0.7 : 1 }}
+          >
+            <span className="icon">{isLoading ? '⏳' : '▶'} </span>
+            {isLoading ? 'Running Test...' : 'Run Test'}
           </button>
         </div>
       </div>
