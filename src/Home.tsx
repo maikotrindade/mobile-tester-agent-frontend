@@ -45,21 +45,25 @@ function Home() {
 
     try {
       const payload = {
-        model: selectedModel,
         goal: testGoal,
         steps: steps.map(step => step.description),
       };
 
       console.log('Sending request to backend:', payload);
 
-      const response = await axios.post('http://localhost:8080/gemini', payload, {
+      // Try proxy first, fallback to direct URL
+      const url = '/api/gemini_2_0Flash';
+      
+      const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
         },
         timeout: 30000, // 30 seconds timeout
+        withCredentials: false, // Explicitly disable credentials for CORS
       });
 
       console.log('Test execution response:', response.data);
+      alert('Test executed successfully!');
     } catch (err) {
       console.error('Test execution failed:', err);
       
