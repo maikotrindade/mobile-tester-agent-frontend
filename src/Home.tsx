@@ -26,17 +26,17 @@ function Home() {
 
   const handleRunTest = async () => {
     if (!selectedModel) {
-      alert('Please select an AI model');
+      setError('Please select an AI model');
       return;
     }
 
     if (!testGoal.trim()) {
-      alert('Please enter a test goal');
+      setError('Please enter a test goal');
       return;
     }
 
     if (steps.length === 0) {
-      alert('Please add at least one test step');
+      setError('Please add at least one test step');
       return;
     }
 
@@ -60,7 +60,6 @@ function Home() {
       });
 
       console.log('Test execution response:', response.data);
-      alert('Test executed successfully!');
     } catch (err) {
       console.error('Test execution failed:', err);
       
@@ -83,7 +82,6 @@ function Home() {
       }
       
       setError(errorMessage);
-      alert(`Test execution failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
