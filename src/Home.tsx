@@ -92,13 +92,32 @@ function Home() {
           errorMessage = 'Network error. Please check if the backend server is running on http://localhost:8080';
         } else if (err.response) {
           // Server responded with error status
-          errorMessage = err.response.data?.message || err.response.statusText || `Server error: ${err.response.status}`;
+          const responseData = err.response.data;
+          const statusText = err.response.statusText;
+          const status = err.response.status;
+          
+          if (responseData) {
+            if (typeof responseData === 'string') {
+              errorMessage = `Server error (${status}): ${responseData}`;
+            } else if (responseData.message) {
+              errorMessage = `Server error (${status}): ${responseData.message}`;
+            } else if (responseData.error) {
+              errorMessage = `Server error (${status}): ${responseData.error}`;
+            } else {
+              errorMessage = `Server error (${status}): ${JSON.stringify(responseData)}`;
+            }
+          } else {
+            errorMessage = statusText || `Server error: ${status}`;
+          }
         } else if (err.request) {
           // Request was made but no response received
           errorMessage = 'No response from server. Please check if the backend is running and CORS is configured.';
         } else {
           errorMessage = err.message || 'Failed to execute test';
         }
+      } else {
+        // Non-Axios error
+        errorMessage = err instanceof Error ? err.message : String(err);
       }
       
       setError(errorMessage);
