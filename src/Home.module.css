@@ -263,6 +263,7 @@ h1 {
 
 .formGroup select,
 .formGroup input,
-.formGroup textarea {
+.formGroup textarea,
+.addStepForm input {
   color: #333; /* Or a suitable dark color for text */
 }
