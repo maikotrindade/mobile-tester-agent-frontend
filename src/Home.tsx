@@ -45,14 +45,30 @@ function Home() {
 
     try {
       const payload = {
+        model: selectedModel,
         goal: testGoal,
         steps: steps.map(step => step.description),
       };
 
       console.log('Sending request to backend:', payload);
 
-      // Try proxy first, fallback to direct URL
-      const url = '/api/gemini_2_0Flash';
+      let url = '';
+      switch (selectedModel) {
+        case 'gpt_4':
+          url = "/api/openRouter/gpt_4";
+          break;
+        case 'gwen_3':
+          url = "/api/ollama/gwen_3_06B";
+          break;
+        case 'gemini':
+          url = "/api/gemini_2_0Flash";
+          break;
+        case 'llama_3_2':
+          url = "/api/ollama/llama_3_2_3B";
+          break;
+        default:
+          throw new Error('Invalid model selected');
+      }
       
       const response = await axios.post(url, payload, {
         headers: {
@@ -103,10 +119,10 @@ function Home() {
           onChange={(e) => setSelectedModel(e.target.value)}
         >
           <option value="">- Select a Model -</option>
-          <option value="gpt-4">GPT-4 Turbo</option>
-          <option value="claude-3">Claude 3 Sonnet</option>
-          <option value="gemini">Gemini Pro</option>
-          <option value="llama-2">LLaMA 2</option>
+          <option value="gpt_4">Open Router GPT-4</option>
+          <option value="gwen_3">Ollama Gwen 3.0 6B</option>
+          <option value="gemini">Gemini 2.0 Flash</option>
+          <option value="llama_3_2">Ollama LLaMA 3.2 3B</option>
         </select>
       </div>
 
