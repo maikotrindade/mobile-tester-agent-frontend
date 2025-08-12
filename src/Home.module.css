@@ -1,12 +1,49 @@
 .container {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
- border-radius: 24px;
+  border-radius: 24px;
   padding: 40px;
   width: 100%;
-  max-width: 600px;
+  max-width: 1400px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mainLayout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 30px;
+  min-height: 600px;
+}
+
+.leftPanel {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.rightPanel {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.panelTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
 }
 
 h1 {
@@ -259,6 +296,15 @@ h1 {
   .button:last-child {
     margin-bottom: 0;
   }
+  
+  .addStepForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .addStepForm input[type="text"] {
+    margin-bottom: 10px;
+  }
 }
 
 .formGroup select,
@@ -266,4 +312,309 @@ h1 {
 .formGroup textarea,
 .addStepForm input {
   color: #333; /* Or a suitable dark color for text */
+}
+
+/* Scenario Management Styles */
+.scenarioControls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.scenarioControlsRow {
+  display: flex;
+  gap: 10px;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  flex: 1;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btnPrimary:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btnSecondary {
+  background: linear-gradient(135deg, #a0aec0, #718096);
+  color: white;
+  flex: 1;
+}
+
+.btnSecondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(160, 174, 192, 0.3);
+}
+
+.btnSmall {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  margin: 0;
+  min-width: 60px;
+}
+
+.currentScenario {
+  background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+  border: 1px solid #4fd1c7;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #234e52;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(79, 209, 199, 0.15);
+}
+
+.scenarioList {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.scenarioList h3 {
+  margin: 0;
+  padding: 16px;
+  background: linear-gradient(135deg, #f7fafc, #edf2f7);
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.scenarioItem {
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.scenarioItem:hover {
+  background: #f8fafc;
+  transform: translateX(4px);
+}
+
+.scenarioItem:last-child {
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.scenarioItem.active {
+  background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+  border-left: 4px solid #38b2ac;
+}
+
+.scenarioInfo {
+  flex: 1;
+  margin-right: 12px;
+}
+
+.scenarioTitle {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.scenarioDetails {
+  font-size: 0.8rem;
+  color: #718096;
+  line-height: 1.4;
+}
+
+.scenarioActions {
+  display: flex;
+  gap: 6px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.scenarioItem:hover .scenarioActions {
+  opacity: 1;
+}
+
+.emptyScenarios {
+  padding: 40px 20px;
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+}
+
+.emptyScenarios .icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* Form Section Styles */
+.formSection {
+  margin-bottom: 32px;
+}
+
+.formSectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modalContent h3 {
+  margin: 0 0 20px 0;
+  color: #2d3748;
+  text-align: center;
+}
+
+.modalContent input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #333;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.modalContent input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.errorMessage {
+  background: #fed7d7;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .mainLayout {
+    grid-template-columns: 350px 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 968px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .mainLayout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .leftPanel,
+  .rightPanel {
+    max-height: none;
+  }
+  
+  .scenarioControls {
+    flex-direction: column;
+  }
+  
+  .scenarioControlsRow {
+    flex-direction: column;
+  }
+  
+  .scenarioItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .scenarioActions {
+    align-self: flex-end;
+  }
+  
+  .modalContent {
+    margin: 20px;
+    width: auto;
+  }
+  
+  .modalActions {
+    flex-direction: column;
+  }
+  
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .leftPanel,
+  .rightPanel {
+    padding: 16px;
+  }
 }

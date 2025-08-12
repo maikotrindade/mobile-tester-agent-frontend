@@ -2,6 +2,16 @@ import { useState } from 'react';
 import axios from 'axios';
 import styles from './Home.module.css';
 
+interface TestScenario {
+  id: string;
+  name: string;
+  model: string;
+  goal: string;
+  steps: { id: number; description: string }[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 function Home() {
   const [selectedModel, setSelectedModel] = useState('');
   const [testGoal, setTestGoal] = useState('');
@@ -10,6 +20,12 @@ function Home() {
   const [stepCounter, setStepCounter] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // New state for scenario management
+  const [scenarios, setScenarios] = useState<TestScenario[]>([]);
+  const [currentScenarioId, setCurrentScenarioId] = useState<string | null>(null);
+  const [scenarioName, setScenarioName] = useState('');
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   const handleAddStep = () => {
     if (newStepDescription.trim() !== '') {
@@ -22,6 +38,99 @@ function Home() {
   const handleRemoveStep = (stepId: number) => {
     const updatedSteps = steps.filter(step => step.id !== stepId);
     setSteps(updatedSteps);
+  };
+
+  // Scenario management functions
+  const generateScenarioId = () => {
+    return `scenario_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+  const handleSaveScenario = () => {
+    if (!scenarioName.trim()) {
+      setError('Please enter a scenario name');
+      return;
+    }
+
+    if (!selectedModel || !testGoal.trim() || steps.length === 0) {
+      setError('Please complete all fields before saving');
+      return;
+    }
+
+    const now = new Date();
+    
+    if (currentScenarioId) {
+      // Update existing scenario
+      setScenarios(prev => prev.map(scenario => 
+        scenario.id === currentScenarioId 
+          ? {
+              ...scenario,
+              name: scenarioName,
+              model: selectedModel,
+              goal: testGoal,
+              steps: [...steps],
+              updatedAt: now
+            }
+          : scenario
+      ));
+    } else {
+      // Create new scenario
+      const newScenario: TestScenario = {
+        id: generateScenarioId(),
+        name: scenarioName,
+        model: selectedModel,
+        goal: testGoal,
+        steps: [...steps],
+        createdAt: now,
+        updatedAt: now
+      };
+      
+      setScenarios(prev => [...prev, newScenario]);
+      setCurrentScenarioId(newScenario.id);
+    }
+
+    setShowSaveDialog(false);
+    setError(null);
+  };
+
+  const handleLoadScenario = (scenario: TestScenario) => {
+    setSelectedModel(scenario.model);
+    setTestGoal(scenario.goal);
+    setSteps([...scenario.steps]);
+    setScenarioName(scenario.name);
+    setCurrentScenarioId(scenario.id);
+    
+    // Update step counter to be higher than any existing step
+    const maxStepId = scenario.steps.length > 0 ? Math.max(...scenario.steps.map(s => s.id)) : 0;
+    setStepCounter(maxStepId + 1);
+    
+    setError(null);
+  };
+
+  const handleNewScenario = () => {
+    setSelectedModel('');
+    setTestGoal('');
+    setSteps([]);
+    setScenarioName('');
+    setCurrentScenarioId(null);
+    setStepCounter(1);
+    setError(null);
+  };
+
+  const handleDeleteScenario = (scenarioId: string) => {
+    setScenarios(prev => prev.filter(s => s.id !== scenarioId));
+    
+    if (currentScenarioId === scenarioId) {
+      handleNewScenario();
+    }
+  };
+
+  const openSaveDialog = () => {
+    if (!selectedModel || !testGoal.trim() || steps.length === 0) {
+      setError('Please complete all fields before saving');
+      return;
+    }
+    setShowSaveDialog(true);
+    setError(null);
   };
 
   const handleRunTest = async () => {
@@ -130,89 +239,209 @@ function Home() {
     <div className={styles.container}>
       <h1>AI Agentic Mobile Tester</h1>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="ai-model">Select AI Model:</label>
-        <select
-          id="ai-model"
-          value={selectedModel}
-          onChange={(e) => setSelectedModel(e.target.value)}
-        >
-          <option value="">- Select a Model -</option>
-          <option value="gpt_4">Open Router GPT-4</option>
-          <option value="gwen_3">Ollama Gwen 3.0 6B</option>
-          <option value="gemini">Gemini 2.0 Flash</option>
-          <option value="llama_3_2">Ollama LLaMA 3.2 3B</option>
-        </select>
-      </div>
+      <div className={styles.mainLayout}>
+        {/* Left Panel - Scenarios List */}
+        <div className={styles.leftPanel}>
+          <div className={styles.panelTitle}>
+            <span className="icon">📋</span>Test Scenarios
+          </div>
+          
+          <div className={styles.scenarioControls}>
+            <div className={styles.scenarioControlsRow}>
+              <button 
+                className={`${styles.button} ${styles.btnSecondary}`} 
+                onClick={handleNewScenario}
+              >New Scenario
+              </button>
+              
+              <button 
+                className={`${styles.button} ${styles.btnPrimary}`} 
+                onClick={openSaveDialog}
+                disabled={!selectedModel || !testGoal.trim() || steps.length === 0}
+              >Save</button>
+            </div>
+          </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="test-goal">Test Goal:</label>
-        <textarea
-          id="test-goal"
-          rows={3}
-          placeholder="Describe what you want to test..."
-          value={testGoal}
-          onChange={(e) => setTestGoal(e.target.value)}
-        ></textarea>
-      </div>
-
-      <div className={styles.testStepsSection}>
-        <div className={styles.sectionTitle}>
-          <span className="icon">⚡</span>Test Steps:
-        </div>
-
-        <div className={styles.addStepForm}>
-          <input
-            type="text"
-            placeholder="Enter step description..."
-            value={newStepDescription}
-            onChange={(e) => setNewStepDescription(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleAddStep();
-              }
-            }}
-          />
-          <button className={`${styles.button} ${styles.btnAddStep}`} onClick={handleAddStep}>
-            <span className="icon">+ </span>Add Step
-          </button>
-        </div>
-
-        <div className={styles.stepsContainer}>
-          {steps.length === 0 ? (
-            <div className={styles.emptyState}>No test steps added yet. Click "Add Step" to begin.</div>
-          ) : (
-            steps.map((step, index) => (
-              <div key={step.id} className={styles.stepItem}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div className={styles.stepNumber}>{index + 1}</div>
-                  <div className={styles.stepContent}>{step.description}</div>
-                </div>
-                <button className={`${styles.button} ${styles.btnDanger}`} onClick={() => handleRemoveStep(step.id)}>
-                  <span className="icon">🗑</span>
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className={styles.buttonGroup}>
-          {error && (
-            <div className={styles.errorMessage} style={{ color: 'red', marginBottom: '10px' }}>
-              {error}
+          {currentScenarioId && (
+            <div className={styles.currentScenario}>
+              <strong>Editing: </strong>{scenarioName || 'Untitled Scenario'}
             </div>
           )}
-          <button 
-            className={`${styles.button} ${styles.btnRunTest}`} 
-            onClick={handleRunTest}
-            disabled={isLoading}
-            style={{ opacity: isLoading ? 0.7 : 1 }}
-          >
-            <span className="icon">{isLoading ? '⏳' : '▶'} </span>
-            {isLoading ? 'Running Test...' : 'Run Test'}
-          </button>
+
+          <div className={styles.scenarioList}>
+            {scenarios.length === 0 ? (
+              <div className={styles.emptyScenarios}>
+                <span className="icon">📝</span>
+                <div>No scenarios yet</div>
+              </div>
+            ) : (
+              <>
+                <h3>Saved Scenarios ({scenarios.length})</h3>
+                {scenarios.map((scenario) => (
+                  <div 
+                    key={scenario.id} 
+                    className={`${styles.scenarioItem} ${scenario.id === currentScenarioId ? styles.active : ''}`}
+                    onClick={() => handleLoadScenario(scenario)}
+                  >
+                    <div className={styles.scenarioInfo}>
+                      <div className={styles.scenarioTitle}>{scenario.name}</div>
+                      <div className={styles.scenarioDetails}>
+                        {scenario.model} • {scenario.steps.length} steps<br/>
+                        Updated: {scenario.updatedAt.toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div className={styles.scenarioActions}>
+                      <button 
+                        className={`${styles.button} ${styles.btnSmall} ${styles.btnDanger}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteScenario(scenario.id);
+                        }}
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Right Panel - Scenario Editor */}
+        <div className={styles.rightPanel}>
+          <div className={styles.panelTitle}>
+            <span className="icon">⚙️</span>
+            {currentScenarioId ? 'Edit Scenario' : 'Create New Scenario'}
+          </div>
+
+          <div className={styles.formSection}>
+            
+            <div className={styles.formGroup}>
+              <label htmlFor="ai-model">Select AI Model:</label>
+              <select
+                id="ai-model"
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+              >
+                <option value="">- Select a Model -</option>
+                <option value="gpt_4">Open Router GPT-4</option>
+                <option value="gwen_3">Ollama Gwen 3.0 6B</option>
+                <option value="gemini">Gemini 2.0 Flash</option>
+                <option value="llama_3_2">Ollama LLaMA 3.2 3B</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.formSection}>
+            <div className={styles.formSectionTitle}>
+              <span className="icon">🎯</span>Test Objective
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="test-goal">Test Goal:</label>
+              <textarea
+                id="test-goal"
+                rows={3}
+                placeholder="Describe what you want to test..."
+                value={testGoal}
+                onChange={(e) => setTestGoal(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+
+          <div className={styles.testStepsSection}>
+            <div className={styles.formSectionTitle}>
+              <span className="icon">⚡</span>Test Steps ({steps.length})
+            </div>
+
+            <div className={styles.addStepForm}>
+              <input
+                type="text"
+                placeholder="Enter step description..."
+                value={newStepDescription}
+                onChange={(e) => setNewStepDescription(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddStep();
+                  }
+                }}
+              />
+              <button className={`${styles.button} ${styles.btnAddStep}`} onClick={handleAddStep}>
+                <span className="icon">+ </span>Add Step
+              </button>
+            </div>
+
+            <div className={styles.stepsContainer}>
+              {steps.length === 0 ? (
+                <div className={styles.emptyState}>No test steps added yet. Click "Add Step" to begin.</div>
+              ) : (
+                steps.map((step, index) => (
+                  <div key={step.id} className={styles.stepItem}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div className={styles.stepNumber}>{index + 1}</div>
+                      <div className={styles.stepContent}>{step.description}</div>
+                    </div>
+                    <button className={`${styles.button} ${styles.btnDanger}`} onClick={() => handleRemoveStep(step.id)}>
+                      <span className="icon">🗑</span>
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className={styles.buttonGroup}>
+              {error && (
+                <div className={styles.errorMessage} style={{ color: 'red', marginBottom: '10px' }}>
+                  {error}
+                </div>
+              )}
+              <button 
+                className={`${styles.button} ${styles.btnRunTest}`} 
+                onClick={handleRunTest}
+                disabled={isLoading}
+                style={{ opacity: isLoading ? 0.7 : 1 }}
+              >
+                <span className="icon">{isLoading ? '⏳' : '▶'} </span>
+                {isLoading ? 'Running Test...' : 'Run Test'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Save Dialog */}
+      {showSaveDialog && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h3>{currentScenarioId ? 'Update Scenario' : 'Save New Scenario'}</h3>
+            <input
+              type="text"
+              placeholder="Enter scenario name..."
+              value={scenarioName}
+              onChange={(e) => setScenarioName(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSaveScenario();
+                }
+              }}
+            />
+            <div className={styles.modalActions}>
+              <button 
+                className={`${styles.button} ${styles.btnPrimary}`}
+                onClick={handleSaveScenario}
+              >
+                Save
+              </button>
+              <button 
+                className={`${styles.button} ${styles.btnSecondary}`}
+                onClick={() => setShowSaveDialog(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
