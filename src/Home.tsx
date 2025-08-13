@@ -198,7 +198,7 @@ function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        timeout: 30000, // 30 seconds timeout
+        timeout: 3 * 60_000, // 3 minutes timeout
         withCredentials: false, // Explicitly disable credentials for CORS
       });
 
