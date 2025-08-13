@@ -1,4 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { db } from './firebase';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+} from 'firebase/firestore';
 import axios from 'axios';
 import styles from './Home.module.css';
 
@@ -40,56 +50,67 @@ function Home() {
     setSteps(updatedSteps);
   };
 
-  // Scenario management functions
-  const generateScenarioId = () => {
-    return `scenario_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  };
+  // Firestore CRUD
+  const scenariosCollection = collection(db, 'testScenarios');
 
-  const handleSaveScenario = () => {
+  useEffect(() => {
+    // Real-time listener for scenarios
+    const unsubscribe = onSnapshot(scenariosCollection, (snapshot) => {
+      const scenarioList: TestScenario[] = snapshot.docs.map(docSnap => {
+        const data = docSnap.data();
+        return {
+          id: docSnap.id,
+          name: data.name,
+          model: data.model,
+          goal: data.goal,
+          steps: data.steps,
+          createdAt: data.createdAt ? new Date(data.createdAt.seconds * 1000) : new Date(),
+          updatedAt: data.updatedAt ? new Date(data.updatedAt.seconds * 1000) : new Date(),
+        };
+      });
+      setScenarios(scenarioList);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSaveScenario = async () => {
     if (!scenarioName.trim()) {
       setError('Please enter a scenario name');
       return;
     }
-
     if (!selectedModel || !testGoal.trim() || steps.length === 0) {
       setError('Please complete all fields before saving');
       return;
     }
-
     const now = new Date();
-    
-    if (currentScenarioId) {
-      // Update existing scenario
-      setScenarios(prev => prev.map(scenario => 
-        scenario.id === currentScenarioId 
-          ? {
-              ...scenario,
-              name: scenarioName,
-              model: selectedModel,
-              goal: testGoal,
-              steps: [...steps],
-              updatedAt: now
-            }
-          : scenario
-      ));
-    } else {
-      // Create new scenario
-      const newScenario: TestScenario = {
-        id: generateScenarioId(),
-        name: scenarioName,
-        model: selectedModel,
-        goal: testGoal,
-        steps: [...steps],
-        createdAt: now,
-        updatedAt: now
-      };
-      
-      setScenarios(prev => [...prev, newScenario]);
-      setCurrentScenarioId(newScenario.id);
+    try {
+      if (currentScenarioId) {
+        // Update scenario
+        const scenarioRef = doc(db, 'testScenarios', currentScenarioId);
+        await updateDoc(scenarioRef, {
+          name: scenarioName,
+          model: selectedModel,
+          goal: testGoal,
+          steps: [...steps],
+          updatedAt: now,
+        });
+      } else {
+        // Create new scenario
+        const docRef = await addDoc(scenariosCollection, {
+          name: scenarioName,
+          model: selectedModel,
+          goal: testGoal,
+          steps: [...steps],
+          createdAt: now,
+          updatedAt: now,
+        });
+        setCurrentScenarioId(docRef.id);
+      }
+      setShowSaveDialog(false);
+      setError(null);
+    } catch (err) {
+      setError('Failed to save scenario to Firestore');
     }
-
-    setShowSaveDialog(false);
-    setError(null);
   };
 
   const handleLoadScenario = (scenario: TestScenario) => {
@@ -98,11 +119,8 @@ function Home() {
     setSteps([...scenario.steps]);
     setScenarioName(scenario.name);
     setCurrentScenarioId(scenario.id);
-    
-    // Update step counter to be higher than any existing step
     const maxStepId = scenario.steps.length > 0 ? Math.max(...scenario.steps.map(s => s.id)) : 0;
     setStepCounter(maxStepId + 1);
-    
     setError(null);
   };
 
@@ -116,11 +134,14 @@ function Home() {
     setError(null);
   };
 
-  const handleDeleteScenario = (scenarioId: string) => {
-    setScenarios(prev => prev.filter(s => s.id !== scenarioId));
-    
-    if (currentScenarioId === scenarioId) {
-      handleNewScenario();
+  const handleDeleteScenario = async (scenarioId: string) => {
+    try {
+      await deleteDoc(doc(db, 'testScenarios', scenarioId));
+      if (currentScenarioId === scenarioId) {
+        handleNewScenario();
+      }
+    } catch (err) {
+      setError('Failed to delete scenario from Firestore');
     }
   };
 
