@@ -30,12 +30,12 @@ function Home() {
   const [stepCounter, setStepCounter] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   
   // New state for scenario management
   const [scenarios, setScenarios] = useState<TestScenario[]>([]);
   const [currentScenarioId, setCurrentScenarioId] = useState<string | null>(null);
-  const [scenarioName, setScenarioName] = useState('');
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  // Removed scenarioName and showSaveDialog state
 
   const handleAddStep = () => {
     if (newStepDescription.trim() !== '') {
@@ -74,12 +74,9 @@ function Home() {
   }, []);
 
   const handleSaveScenario = async () => {
-    if (!scenarioName.trim()) {
-      setError('Please enter a scenario name');
-      return;
-    }
     if (!selectedModel || !testGoal.trim() || steps.length === 0) {
       setError('Please complete all fields before saving');
+      setSuccess(null);
       return;
     }
     const now = new Date();
@@ -88,7 +85,7 @@ function Home() {
         // Update scenario
         const scenarioRef = doc(db, 'testScenarios', currentScenarioId);
         await updateDoc(scenarioRef, {
-          name: scenarioName,
+          name: testGoal, // Use testGoal as scenario name
           model: selectedModel,
           goal: testGoal,
           steps: [...steps],
@@ -97,7 +94,7 @@ function Home() {
       } else {
         // Create new scenario
         const docRef = await addDoc(scenariosCollection, {
-          name: scenarioName,
+          name: testGoal, // Use testGoal as scenario name
           model: selectedModel,
           goal: testGoal,
           steps: [...steps],
@@ -106,10 +103,12 @@ function Home() {
         });
         setCurrentScenarioId(docRef.id);
       }
-      setShowSaveDialog(false);
       setError(null);
+      setSuccess('Test scenario saved!');
+      setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError('Failed to save scenario to Firestore');
+      setSuccess(null);
     }
   };
 
@@ -117,7 +116,6 @@ function Home() {
     setSelectedModel(scenario.model);
     setTestGoal(scenario.goal);
     setSteps([...scenario.steps]);
-    setScenarioName(scenario.name);
     setCurrentScenarioId(scenario.id);
     const maxStepId = scenario.steps.length > 0 ? Math.max(...scenario.steps.map(s => s.id)) : 0;
     setStepCounter(maxStepId + 1);
@@ -128,7 +126,6 @@ function Home() {
     setSelectedModel('');
     setTestGoal('');
     setSteps([]);
-    setScenarioName('');
     setCurrentScenarioId(null);
     setStepCounter(1);
     setError(null);
@@ -140,19 +137,16 @@ function Home() {
       if (currentScenarioId === scenarioId) {
         handleNewScenario();
       }
+      setError(null);
+      setSuccess('Test scenario removed!');
+      setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError('Failed to delete scenario from Firestore');
+      setSuccess(null);
     }
   };
 
-  const openSaveDialog = () => {
-    if (!selectedModel || !testGoal.trim() || steps.length === 0) {
-      setError('Please complete all fields before saving');
-      return;
-    }
-    setShowSaveDialog(true);
-    setError(null);
-  };
+  // Remove openSaveDialog, saving is now direct
 
   const handleRunTest = async () => {
     if (!selectedModel) {
@@ -209,7 +203,8 @@ function Home() {
       });
 
       console.log('Test execution response:', response.data);
-      alert('Test executed successfully!');
+  setSuccess('Test executed successfully!');
+  setTimeout(() => setSuccess(null), 4000);
     } catch (err) {
       console.error('Test execution failed:', err);
       
@@ -277,7 +272,7 @@ function Home() {
               
               <button 
                 className={`${styles.button} ${styles.btnPrimary}`} 
-                onClick={openSaveDialog}
+                onClick={handleSaveScenario}
                 disabled={!selectedModel || !testGoal.trim() || steps.length === 0}
               >Save</button>
             </div>
@@ -285,7 +280,7 @@ function Home() {
 
           {currentScenarioId && (
             <div className={styles.currentScenario}>
-              <strong>Editing: </strong>{scenarioName || 'Untitled Scenario'}
+              <strong>Editing: </strong>{testGoal || 'Untitled Scenario'}
             </div>
           )}
 
@@ -416,6 +411,11 @@ function Home() {
                   {error}
                 </div>
               )}
+              {success && (
+                <div className={styles.successMessage} style={{ color: 'green', marginBottom: '10px' }}>
+                  {success}
+                </div>
+              )}
               <button 
                 className={`${styles.button} ${styles.btnRunTest}`} 
                 onClick={handleRunTest}
@@ -430,39 +430,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Save Dialog */}
-      {showSaveDialog && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h3>{currentScenarioId ? 'Update Scenario' : 'Save New Scenario'}</h3>
-            <input
-              type="text"
-              placeholder="Enter scenario name..."
-              value={scenarioName}
-              onChange={(e) => setScenarioName(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSaveScenario();
-                }
-              }}
-            />
-            <div className={styles.modalActions}>
-              <button 
-                className={`${styles.button} ${styles.btnSecondary}`}
-                onClick={() => setShowSaveDialog(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                className={`${styles.button} ${styles.btnPrimary}`}
-                onClick={handleSaveScenario}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  {/* Removed Save Dialog modal */}
     </div>
   );
 }
