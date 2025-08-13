@@ -1,83 +1,98 @@
 .container {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border-radius: 24px;
-  padding: 40px;
+  border-radius: 16px;
+  padding: 20px;
   width: 100%;
   max-width: 1400px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .mainLayout {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 30px;
-  min-height: 600px;
+  grid-template-columns: 350px 1fr;
+  gap: 20px;
+  min-height: 500px;
 }
 
 .leftPanel {
   background: #f8fafc;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 16px;
   border: 1px solid #e2e8f0;
   overflow-y: auto;
-  max-height: 80vh;
+  max-height: 75vh;
 }
 
 .rightPanel {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 16px;
   border: 1px solid #e2e8f0;
   overflow-y: auto;
-  max-height: 80vh;
+  max-height: 75vh;
 }
 
 .panelTitle {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   color: #2d3748;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(160deg, #4f6ae2, #783bb6, #2d4bcc, #da396e, #3f57c2);
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shimmer 20s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  position: relative;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 300% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: -300% 0;
+  }
 }
 
 .formGroup {
-  margin-bottom: 25px;
+  margin-bottom: 16px;
 }
 
 .formGroup label {
   display: block;
   color: #4a5568;
   font-weight: 600;
-  margin-bottom: 8px;
-  font-size: 1.1rem;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
 }
 
 .formGroup select,
 .formGroup input,
 .formGroup textarea {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border: 2px solid #e2e8f0;
   background-color: #ffffff;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   
   transition: all 0.3s ease;
   outline: none;
@@ -96,27 +111,27 @@ h1 {
 }
 
 .testStepsSection {
-  margin-top: 35px;
+  margin-top: 20px;
 }
 
 .sectionTitle {
   color: #2d3748;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .stepsContainer {
   background: #f7fafc;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
   border: 2px dashed #cbd5e0;
   transition: all 0.3s ease;
-  min-height: 120px;
+  min-height: 100px;
   display: flex;
   flex-direction: column; /* Added to stack step items */
   align-items: center;
@@ -137,9 +152,9 @@ h1 {
 .stepItem {
   background: #ffffff;
   border: 1px solid #c0c6ce;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -165,22 +180,22 @@ h1 {
 .stepNumber {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  margin-right: 15px;
-  font-size: 0.9rem;
+  margin-right: 12px;
+  font-size: 0.8rem;
 }
 
 .button {
-  padding: 12px 24px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -226,8 +241,8 @@ h1 {
 .btnDanger {
   background: linear-gradient(135deg, #f56565, #e53e3e);
   color: white;
-  padding: 8px 12px;
-  font-size: 0.85rem;
+  padding: 6px 10px;
+  font-size: 0.8rem;
 }
 
 .btnDanger:hover {
@@ -237,30 +252,30 @@ h1 {
 
 .buttonGroup {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 16px;
   margin-bottom: 0; /* Remove bottom margin */
   justify-content: flex-end; /* Align items to the right */
 }
 
 .addStepForm {
   background: #f7fafc;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
   border: 1px solid #e2e8f0;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
 .addStepForm input[type="text"] {
   flex: 1;
-  padding: 12px 16px;
+  padding: 8px 12px;
   background-color: #ffffff;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -271,7 +286,7 @@ h1 {
 }
 
 .icon {
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 @media (max-width: 768px) {
@@ -318,13 +333,13 @@ h1 {
 .scenarioControls {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .scenarioControlsRow {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .btnPrimary {
@@ -357,42 +372,42 @@ h1 {
 }
 
 .btnSmall {
-  padding: 8px 16px;
-  font-size: 0.85rem;
+  padding: 6px 12px;
+  font-size: 0.8rem;
   margin: 0;
-  min-width: 60px;
+  min-width: 50px;
 }
 
 .currentScenario {
   background: linear-gradient(135deg, #e6fffa, #b2f5ea);
   border: 1px solid #4fd1c7;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
   color: #234e52;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(79, 209, 199, 0.15);
+  box-shadow: 0 2px 8px rgba(79, 209, 199, 0.15);
 }
 
 .scenarioList {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 0;
   border: 1px solid #e2e8f0;
-  max-height: 400px;
+  max-height: 350px;
   overflow-y: auto;
 }
 
 .scenarioList h3 {
   margin: 0;
-  padding: 16px;
+  padding: 12px;
   background: linear-gradient(135deg, #f7fafc, #edf2f7);
   border-bottom: 1px solid #e2e8f0;
   color: #2d3748;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 12px 12px 0 0;
+  border-radius: 8px 8px 0 0;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -401,7 +416,7 @@ h1 {
 .scenarioItem {
   background: #ffffff;
   border-bottom: 1px solid #f1f5f9;
-  padding: 16px;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -416,7 +431,7 @@ h1 {
 
 .scenarioItem:last-child {
   border-bottom: none;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 8px 8px;
 }
 
 .scenarioItem.active {
@@ -426,25 +441,25 @@ h1 {
 
 .scenarioInfo {
   flex: 1;
-  margin-right: 12px;
+  margin-right: 8px;
 }
 
 .scenarioTitle {
   font-weight: 600;
   color: #2d3748;
-  margin-bottom: 6px;
-  font-size: 1rem;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
 }
 
 .scenarioDetails {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #718096;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .scenarioActions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   opacity: 0.7;
   transition: opacity 0.3s ease;
 }
@@ -454,33 +469,33 @@ h1 {
 }
 
 .emptyScenarios {
-  padding: 40px 20px;
+  padding: 30px 16px;
   text-align: center;
   color: #718096;
   font-style: italic;
 }
 
 .emptyScenarios .icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
   display: block;
 }
 
 /* Form Section Styles */
 .formSection {
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .formSectionTitle {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #2d3748;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
 }
 
 /* Modal Styles */
@@ -500,29 +515,29 @@ h1 {
 
 .modalContent {
   background: white;
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: 12px;
+  padding: 20px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .modalContent h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
   color: #2d3748;
   text-align: center;
 }
 
 .modalContent input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   background: #ffffff;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   outline: none;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
@@ -535,7 +550,7 @@ h1 {
 
 .modalActions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: flex-end;
 }
 
@@ -543,28 +558,28 @@ h1 {
   background: #fed7d7;
   border: 1px solid #feb2b2;
   color: #c53030;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .mainLayout {
-    grid-template-columns: 350px 1fr;
-    gap: 20px;
+    grid-template-columns: 300px 1fr;
+    gap: 16px;
   }
 }
 
 @media (max-width: 968px) {
   .container {
-    padding: 20px;
+    padding: 16px;
   }
   
   .mainLayout {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
   
   .leftPanel,
@@ -583,7 +598,7 @@ h1 {
   .scenarioItem {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
   }
   
   .scenarioActions {
@@ -591,7 +606,7 @@ h1 {
   }
   
   .modalContent {
-    margin: 20px;
+    margin: 16px;
     width: auto;
   }
   
@@ -604,17 +619,17 @@ h1 {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: 16px;
+    padding: 12px;
   }
   
   .leftPanel,
   .rightPanel {
-    padding: 16px;
+    padding: 12px;
   }
 }

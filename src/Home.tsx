@@ -341,7 +341,7 @@ function Home() {
               <label htmlFor="test-goal">Test Goal:</label>
               <textarea
                 id="test-goal"
-                rows={3}
+                rows={2}
                 placeholder="Describe what you want to test..."
                 value={testGoal}
                 onChange={(e) => setTestGoal(e.target.value)}
@@ -373,7 +373,7 @@ function Home() {
 
             <div className={styles.stepsContainer}>
               {steps.length === 0 ? (
-                <div className={styles.emptyState}>No test steps added yet. Click "Add Step" to begin.</div>
+                <div className={styles.emptyState}>No test steps added yet</div>
               ) : (
                 steps.map((step, index) => (
                   <div key={step.id} className={styles.stepItem}>
@@ -427,16 +427,16 @@ function Home() {
             />
             <div className={styles.modalActions}>
               <button 
-                className={`${styles.button} ${styles.btnPrimary}`}
-                onClick={handleSaveScenario}
-              >
-                Save
-              </button>
-              <button 
                 className={`${styles.button} ${styles.btnSecondary}`}
                 onClick={() => setShowSaveDialog(false)}
               >
                 Cancel
+              </button>
+              <button 
+                className={`${styles.button} ${styles.btnPrimary}`}
+                onClick={handleSaveScenario}
+              >
+                Save
               </button>
             </div>
           </div>
