@@ -1,3 +1,16 @@
+/* Edit Button Style: same size as btnDanger, different color */
+.btnEdit {
+  background: linear-gradient(135deg, #abd6f7, #3182ce);
+  color: white;
+  font-size: 0.rem;
+  margin-right: 6px;
+}
+
+.btnEdit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(66, 153, 225, 0.3);
+}
+
 .container {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
@@ -241,7 +254,7 @@ h1 {
 .btnDanger {
   background: linear-gradient(135deg, #f56565, #e53e3e);
   color: white;
-  padding: 6px 10px;
+  padding: 6px 12px;
   font-size: 0.8rem;
 }
 
@@ -372,7 +385,7 @@ h1 {
 }
 
 .btnSmall {
-  padding: 6px 12px;
+  padding: 6px 10px;
   font-size: 0.8rem;
   margin: 0;
   min-width: 50px;
@@ -536,7 +549,6 @@ h1 {
   border-radius: 8px;
   font-size: 0.9rem;
   background: #ffffff;
-  color: #333;
   margin-bottom: 16px;
   outline: none;
   transition: border-color 0.3s ease;

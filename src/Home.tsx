@@ -26,6 +26,8 @@ function Home() {
   const [selectedModel, setSelectedModel] = useState('');
   const [testGoal, setTestGoal] = useState('');
   const [steps, setSteps] = useState<{ id: number; description: string }[]>([]);
+  const [editingStepId, setEditingStepId] = useState<number | null>(null);
+  const [editingStepDescription, setEditingStepDescription] = useState('');
   const [newStepDescription, setNewStepDescription] = useState('');
   const [stepCounter, setStepCounter] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +50,31 @@ function Home() {
   const handleRemoveStep = (stepId: number) => {
     const updatedSteps = steps.filter(step => step.id !== stepId);
     setSteps(updatedSteps);
+    if (editingStepId === stepId) {
+      setEditingStepId(null);
+      setEditingStepDescription('');
+    }
+  };
+
+  const handleEditStep = (stepId: number, description: string) => {
+    setEditingStepId(stepId);
+    setEditingStepDescription(description);
+  };
+
+  const handleEditStepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditingStepDescription(e.target.value);
+  };
+
+  const handleEditStepSave = (stepId: number) => {
+    if (editingStepDescription.trim() === '') return;
+    setSteps(steps.map(step => step.id === stepId ? { ...step, description: editingStepDescription } : step));
+    setEditingStepId(null);
+    setEditingStepDescription('');
+  };
+
+  const handleEditStepCancel = () => {
+    setEditingStepId(null);
+    setEditingStepDescription('');
   };
 
   // Firestore CRUD
@@ -73,44 +100,43 @@ function Home() {
     return () => unsubscribe();
   }, []);
 
-  const handleSaveScenario = async () => {
-    if (!selectedModel || !testGoal.trim() || steps.length === 0) {
-      setError('Please complete all fields before saving');
-      setSuccess(null);
-      return;
-    }
-    const now = new Date();
-    try {
-      if (currentScenarioId) {
-        // Update scenario
-        const scenarioRef = doc(db, 'testScenarios', currentScenarioId);
-        await updateDoc(scenarioRef, {
-          name: testGoal, // Use testGoal as scenario name
-          model: selectedModel,
-          goal: testGoal,
-          steps: [...steps],
-          updatedAt: now,
-        });
-      } else {
-        // Create new scenario
-        const docRef = await addDoc(scenariosCollection, {
-          name: testGoal, // Use testGoal as scenario name
-          model: selectedModel,
-          goal: testGoal,
-          steps: [...steps],
-          createdAt: now,
-          updatedAt: now,
-        });
-        setCurrentScenarioId(docRef.id);
+  // Auto-save logic
+  useEffect(() => {
+    if (!selectedModel && !testGoal.trim() && steps.length === 0) return;
+    const autoSave = async () => {
+      const now = new Date();
+      try {
+        if (currentScenarioId) {
+          const scenarioRef = doc(db, 'testScenarios', currentScenarioId);
+          await updateDoc(scenarioRef, {
+            name: testGoal,
+            model: selectedModel,
+            goal: testGoal,
+            steps: [...steps],
+            updatedAt: now,
+          });
+        } else if (selectedModel && testGoal.trim() && steps.length > 0) {
+          const docRef = await addDoc(scenariosCollection, {
+            name: testGoal,
+            model: selectedModel,
+            goal: testGoal,
+            steps: [...steps],
+            createdAt: now,
+            updatedAt: now,
+          });
+          setCurrentScenarioId(docRef.id);
+        }
+        setError(null);
+        setSuccess('Auto-saved!');
+        setTimeout(() => setSuccess(null), 1500);
+      } catch (err) {
+        setError('Failed to auto-save scenario');
+        setSuccess(null);
       }
-      setError(null);
-      setSuccess('Test scenario saved!');
-      setTimeout(() => setSuccess(null), 3000);
-    } catch (err) {
-      setError('Failed to save scenario to Firestore');
-      setSuccess(null);
-    }
-  };
+    };
+    autoSave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedModel, testGoal, steps]);
 
   const handleLoadScenario = (scenario: TestScenario) => {
     setSelectedModel(scenario.model);
@@ -269,12 +295,6 @@ function Home() {
                 onClick={handleNewScenario}
               >New Scenario
               </button>
-              
-              <button 
-                className={`${styles.button} ${styles.btnPrimary}`} 
-                onClick={handleSaveScenario}
-                disabled={!selectedModel || !testGoal.trim() || steps.length === 0}
-              >Save</button>
             </div>
           </div>
 
@@ -393,9 +413,40 @@ function Home() {
               ) : (
                 steps.map((step, index) => (
                   <div key={step.id} className={styles.stepItem}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                       <div className={styles.stepNumber}>{index + 1}</div>
-                      <div className={styles.stepContent}>{step.description}</div>
+                      {editingStepId === step.id ? (
+                        <>
+                          <input
+                            type="text"
+                            value={editingStepDescription}
+                            onChange={handleEditStepChange}
+                            className={styles.stepEditInput}
+                            style={{ flex: 1, marginRight: '8px', background: '#f0f0f0', color: '#333' }}
+                          />
+                          <button
+                            className={`${styles.button} ${styles.btnSmall} ${styles.btnPrimary}`}
+                            onClick={() => handleEditStepSave(step.id)}
+                            style={{ marginRight: '4px' }}
+                          >Save</button>
+                          <button
+                            className={`${styles.button} ${styles.btnSmall} ${styles.btnSecondary}`}
+                            onClick={handleEditStepCancel}
+                            style={{ marginRight: '4px' }}
+                          >Cancel</button>
+                        </>
+                      ) : (
+                        <>
+                          <div className={styles.stepContent} style={{ flex: 1 }}>{step.description}</div>
+                          <button
+                            className={`${styles.button} ${styles.btnEdit}`}
+                            onClick={() => handleEditStep(step.id, step.description)}
+                            title="Edit step"
+                          >
+                            <span className="icon">✏️</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                     <button className={`${styles.button} ${styles.btnDanger}`} onClick={() => handleRemoveStep(step.id)}>
                       <span className="icon">🗑</span>
