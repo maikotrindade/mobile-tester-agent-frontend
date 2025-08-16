@@ -14,7 +14,6 @@ import styles from './Home.module.css';
 interface TestScenario {
   id: string;
   name: string;
-  model: string;
   goal: string;
   steps: { id: number; description: string }[];
   createdAt: Date;
@@ -87,7 +86,6 @@ function Home() {
         return {
           id: docSnap.id,
           name: data.name,
-          model: data.model,
           goal: data.goal,
           steps: data.steps,
           createdAt: data.createdAt ? new Date(data.createdAt.seconds * 1000) : new Date(),
@@ -101,7 +99,7 @@ function Home() {
 
   // Auto-save logic
   useEffect(() => {
-    if (!selectedModel && !testGoal.trim() && steps.length === 0) return;
+    if (!testGoal.trim() && steps.length === 0) return;
     const autoSave = async () => {
       const now = new Date();
       try {
@@ -109,15 +107,13 @@ function Home() {
           const scenarioRef = doc(db, 'testScenarios', currentScenarioId);
           await updateDoc(scenarioRef, {
             name: testGoal,
-            model: selectedModel,
             goal: testGoal,
             steps: [...steps],
             updatedAt: now,
           });
-        } else if (selectedModel && testGoal.trim() && steps.length > 0) {
+        } else if (testGoal.trim() && steps.length > 0) {
           const docRef = await addDoc(scenariosCollection, {
             name: testGoal,
-            model: selectedModel,
             goal: testGoal,
             steps: [...steps],
             createdAt: now,
@@ -135,10 +131,9 @@ function Home() {
     };
     autoSave();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedModel, testGoal, steps]);
+  }, [testGoal, steps]);
 
   const handleLoadScenario = (scenario: TestScenario) => {
-    setSelectedModel(scenario.model);
     setTestGoal(scenario.goal);
     setSteps([...scenario.steps]);
     setCurrentScenarioId(scenario.id);
@@ -319,7 +314,7 @@ function Home() {
                     <div className={styles.scenarioInfo}>
                       <div className={styles.scenarioTitle}>{scenario.name}</div>
                       <div className={styles.scenarioDetails}>
-                        {scenario.model} • {scenario.steps.length} steps<br/>
+                        {scenario.steps.length} steps<br/>
                         Updated: {scenario.updatedAt.toLocaleDateString()}
                       </div>
                     </div>
