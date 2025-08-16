@@ -278,8 +278,6 @@ function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>AI Agentic Mobile Tester</h1>
-
       <div className={styles.mainLayout}>
         {/* Left Panel - Scenarios List */}
         <div className={styles.leftPanel}>
