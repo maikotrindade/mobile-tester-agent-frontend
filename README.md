@@ -14,6 +14,11 @@ The frontend is the **visual interface** of the Mobile Tester Agent system. It a
 * View **reports and test results** in a structured way.
 
 ---
+## 📷 Screenshot
+
+<img height="520" alt="Mobile Tester Agent Frontend" src="https://github.com/user-attachments/assets/cef8adef-491e-43fc-9f7a-fd1a08aa3cfa" />
+
+---
 
 ## 🏗️ Tech Stack
 
