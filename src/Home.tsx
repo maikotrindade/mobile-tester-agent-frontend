@@ -6,7 +6,6 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
 } from 'firebase/firestore';
 import axios from 'axios';
