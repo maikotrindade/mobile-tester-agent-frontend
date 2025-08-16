@@ -1,0 +1,11 @@
+.footer {
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+  font-size: 0.8rem;
+  color: aliceblue;
+}
+
+.footer a {
+  color: aliceblue;
+}

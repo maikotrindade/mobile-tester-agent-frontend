@@ -1,9 +1,10 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from '../src/Home';
+import Home from './Home';
 import Settings from './Settings';
 import About from './About';
 import TopNav from './TopNav';
+import { Footer } from './Footer';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/about" element={<About />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
