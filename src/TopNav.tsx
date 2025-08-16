@@ -12,6 +12,9 @@ const TopNav: React.FC = () => {
         <NavLink to="/settings" className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}>
           Settings
         </NavLink>
+        <NavLink to="/about" className={({ isActive }) => isActive ? `${styles.link} ${styles.active}` : styles.link}>
+          About
+        </NavLink>
       </div>
     </nav>
   );
