@@ -21,7 +21,6 @@ interface TestScenario {
 }
 
 function Home() {
-  const [selectedModel, setSelectedModel] = useState('');
   const [testGoal, setTestGoal] = useState('');
   const [steps, setSteps] = useState<{ id: number; description: string }[]>([]);
   const [editingStepId, setEditingStepId] = useState<number | null>(null);
@@ -143,7 +142,6 @@ function Home() {
   };
 
   const handleNewScenario = () => {
-    setSelectedModel('');
     setTestGoal('');
     setSteps([]);
     setCurrentScenarioId(null);
@@ -169,11 +167,6 @@ function Home() {
   // Remove openSaveDialog, saving is now direct
 
   const handleRunTest = async () => {
-    if (!selectedModel) {
-      setError('Please select an AI model');
-      return;
-    }
-
     if (!testGoal.trim()) {
       setError('Please enter a test goal');
       return;
@@ -189,31 +182,11 @@ function Home() {
 
     try {
       const payload = {
-        model: selectedModel,
         goal: testGoal,
         steps: steps.map(step => step.description),
       };
 
-      console.log('Sending request to backend:', payload);
-
-      let url = '';
-      switch (selectedModel) {
-        case 'gpt_4':
-          url = "/api/openRouter/gpt_4";
-          break;
-        case 'gwen_3':
-          url = "/api/ollama/gwen_3_06B";
-          break;
-        case 'gemini':
-          url = "/api/gemini_2_0Flash";
-          break;
-        case 'llama_3_2':
-          url = "/api/ollama/llama_3_2_3B";
-          break;
-        default:
-          throw new Error('Invalid model selected');
-      }
-      
+      let url = '/api/run-test';
       const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
@@ -273,6 +246,7 @@ function Home() {
 
   return (
     <div className={styles.container}>
+      <h1>AI Agentic Mobile Tester</h1>
       <div className={styles.mainLayout}>
         {/* Left Panel - Scenarios List */}
         <div className={styles.leftPanel}>
@@ -280,22 +254,6 @@ function Home() {
             <span className="icon">📋</span>Test Scenarios
           </div>
           
-          <div className={styles.scenarioControls}>
-            <div className={styles.scenarioControlsRow}>
-              <button 
-                className={`${styles.button} ${styles.btnSecondary}`} 
-                onClick={handleNewScenario}
-              >New Scenario
-              </button>
-            </div>
-          </div>
-
-          {currentScenarioId && (
-            <div className={styles.currentScenario}>
-              <strong>Editing: </strong>{testGoal || 'Untitled Scenario'}
-            </div>
-          )}
-
           <div className={styles.scenarioList}>
             {scenarios.length === 0 ? (
               <div className={styles.emptyScenarios}>
@@ -334,6 +292,16 @@ function Home() {
               </>
             )}
           </div>
+
+          <div className={styles.scenarioControls}>
+            <div className={styles.scenarioControlsRow}>
+              <button 
+                className={`${styles.button} ${styles.btnSecondary}`} 
+                onClick={handleNewScenario}
+              >New Scenario
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Right Panel - Scenario Editor */}
@@ -341,24 +309,6 @@ function Home() {
           <div className={styles.panelTitle}>
             <span className="icon">⚙️</span>
             {currentScenarioId ? 'Edit Scenario' : 'Create New Scenario'}
-          </div>
-
-          <div className={styles.formSection}>
-            
-            <div className={styles.formGroup}>
-              <label htmlFor="ai-model">Select AI Model:</label>
-              <select
-                id="ai-model"
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-              >
-                <option value="">- Select a Model -</option>
-                <option value="gpt_4">Open Router GPT-4</option>
-                <option value="gwen_3">Ollama Gwen 3.0 6B</option>
-                <option value="gemini">Gemini 2.0 Flash</option>
-                <option value="llama_3_2">Ollama LLaMA 3.2 3B</option>
-              </select>
-            </div>
           </div>
 
           <div className={styles.formSection}>

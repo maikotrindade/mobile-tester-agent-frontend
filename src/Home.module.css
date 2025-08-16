@@ -119,6 +119,15 @@ h1 {
   transform: translateY(-1px);
 }
 
+.modelDisplay {
+  background-color: #f7fafc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  color: #4a5568;
+  font-weight: 600;
+}
+
 .formGroup select {
   cursor: pointer;
 }
@@ -347,7 +356,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .scenarioControlsRow {
