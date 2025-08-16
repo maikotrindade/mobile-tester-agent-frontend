@@ -89,8 +89,8 @@ const Settings: React.FC = () => {
             type="range"
             id="llm-temperature"
             min="0"
-            max="2"
-            step="0.1"
+            max="10"
+            step="0.2"
             value={llmTemperature}
             onChange={(e) => setLlmTemperature(parseFloat(e.target.value))}
           />
