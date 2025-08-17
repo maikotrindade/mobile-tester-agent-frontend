@@ -7,6 +7,7 @@
   border-radius: 16px;
   margin-top: 20px;
   width: 100%;
+  max-width: 1400px;
 }
 
 .navContent {
@@ -36,4 +37,41 @@
 .link.active {
   color: #667eea;
   border-bottom-color: #667eea;
+}
+
+/* Responsive adjustments for navigation */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    border-radius: 12px;
+  }
+  
+  .navContent {
+    height: 50px;
+  }
+  
+  .link {
+    padding: 0 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding: 0 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+  
+  .navContent {
+    height: 45px;
+  }
+  
+  .link {
+    padding: 0 8px;
+    font-size: 0.85rem;
+  }
 }

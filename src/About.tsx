@@ -20,9 +20,8 @@ const About: React.FC = () => {
     <div className={styles.container}>
       <h1>About</h1>
       <p className={styles.lead}>
-        The <strong>Mobile Tester Agent</strong> automates Android testing with{' '}
-        <strong>AI-powered agents</strong>. It is composed of three repositories
-        working together.
+        The <strong>AI Agentic Mobile Tester Agent</strong> automates Android application testing with{' '}
+        <strong>AI-powered agents</strong>.
       </p>
 
       <div className={homeStyles.mainLayout}>

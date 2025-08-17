@@ -9,6 +9,19 @@
   font-family: var(--font-family); /* Use the defined font family */
 }
 
+/* Responsive adjustments for the main app container */
+@media (max-width: 768px) {
+  #root {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 0 5px 5px 5px;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

@@ -5,7 +5,6 @@
   padding: 20px;
   width: 100%;
   max-width: 1400px;
-  min-width: 1200px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -256,4 +255,70 @@
   border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Additional responsive breakpoints */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 968px) {
+  .container {
+    padding: 16px;
+    max-width: 98%;
+    margin: 0 auto;
+  }
+  
+  .lead {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  
+  .lead {
+    font-size: 0.95rem;
+    text-align: left;
+  }
+  
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .diagram {
+    padding: 15px;
+    margin-top: 20px;
+  }
+  
+  .btns {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    margin: 5px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .diagram {
+    padding: 12px;
+  }
 }
