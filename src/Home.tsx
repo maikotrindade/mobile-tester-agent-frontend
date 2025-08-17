@@ -320,7 +320,7 @@ function Home() {
               <textarea
                 id="test-goal"
                 rows={2}
-                placeholder="Describe what you want to test..."
+                placeholder="Describe the test's goal..."
                 value={testGoal}
                 onChange={(e) => setTestGoal(e.target.value)}
               ></textarea>
@@ -345,7 +345,7 @@ function Home() {
                 }}
               />
               <button className={`${styles.button} ${styles.btnAddStep}`} onClick={handleAddStep}>
-                <span className="icon">+ </span>Add Step
+                Add Step
               </button>
             </div>
 
