@@ -7,6 +7,7 @@ const Settings: React.FC = () => {
   const [llmTemperature, setLlmTemperature] = useState<number>(0.2);
   const [maxAgentIterations, setMaxAgentIterations] = useState<number>(50);
   const [logTokensConsumption, setLogTokensConsumption] = useState<boolean>(true);
+  const [apiBaseUrl, setApiBaseUrl] = useState<string>('http://localhost:8080');
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -26,6 +27,10 @@ const Settings: React.FC = () => {
     if (savedLogTokensConsumption) {
       setLogTokensConsumption(savedLogTokensConsumption === 'true');
     }
+    const savedApiBaseUrl = localStorage.getItem('apiBaseUrl');
+    if (savedApiBaseUrl) {
+      setApiBaseUrl(savedApiBaseUrl);
+    }
   }, []);
 
   const handleSave = async () => {
@@ -34,6 +39,7 @@ const Settings: React.FC = () => {
       llmTemperature,
       maxAgentIterations,
       logTokensConsumption,
+      apiBaseUrl,
     };
 
     // Save to localStorage
@@ -41,6 +47,7 @@ const Settings: React.FC = () => {
     localStorage.setItem('llmTemperature', llmTemperature.toString());
     localStorage.setItem('maxAgentIterations', maxAgentIterations.toString());
     localStorage.setItem('logTokensConsumption', logTokensConsumption.toString());
+    localStorage.setItem('apiBaseUrl', apiBaseUrl);
 
     try {
       const response = await fetch('/api/config', {
@@ -116,6 +123,24 @@ const Settings: React.FC = () => {
           </div>
           
           <div className={styles.formSection}>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="api-base-url">API Base URL:</label>
+              <input
+                type="url"
+                id="api-base-url"
+                value={apiBaseUrl}
+                onChange={(e) => setApiBaseUrl(e.target.value)}
+                placeholder="http://localhost:8080"
+                className={styles.inputField}
+                pattern="https?://.*"
+                required
+              />
+              <div className={styles.tokenInfo}>
+                <small>Set the base URL for API calls</small>
+              </div>
+            </div>
+
             <div className={styles.formGroup}>
               <label htmlFor="max-agent-iterations">Max Agent Iterations:</label>
               <input

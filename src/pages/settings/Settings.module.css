@@ -59,6 +59,7 @@ h1 {
 
 .formGroup select,
 .formGroup input[type="number"],
+.formGroup input[type="url"],
 .formGroup input[type="range"] {
   width: 100%;
   padding: 10px 12px;
