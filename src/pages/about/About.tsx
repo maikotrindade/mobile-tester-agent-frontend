@@ -1,7 +1,7 @@
 import React from 'react';
 import mermaid from 'mermaid';
 import styles from './About.module.css';
-import homeStyles from './Home.module.css';
+import homeStyles from '../home/Home.module.css';
 
 const About: React.FC = () => {
   React.useEffect(() => {

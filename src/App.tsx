@@ -1,8 +1,8 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Settings from './Settings';
-import About from './About';
+import Home from './pages/home/Home';
+import Settings from './pages/settings/Settings';
+import About from './pages/about/About';
 import TopNav from './TopNav';
 import { Footer } from './Footer';
 

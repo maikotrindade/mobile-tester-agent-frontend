@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Settings.module.css';
-import homeStyles from './Home.module.css';
+import homeStyles from '../home/Home.module.css';
 
 const Settings: React.FC = () => {
   const [executorInfoId, setExecutorInfoId] = useState<string>('');
